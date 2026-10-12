@@ -35,7 +35,7 @@ final class DemoRecorder {
         }
 
         // 1. Shortcut intro (panel hidden).
-        frame(panel: nil, caption: "Press  ⌃ Space  anywhere", keycaps: true, duration: 1.6)
+        frame(panel: nil, caption: "Press  ⌘ ⇧ F  anywhere", keycaps: true, duration: 1.6)
         // 2. Panel opens.
         panel.show()
         await sleep(0.8)
@@ -135,10 +135,10 @@ final class DemoRecorder {
     }
 
     private func drawKeycaps(center: NSPoint) {
-        let keys = ["⌃ control", "space"]
-        let widths: [CGFloat] = [190, 320]
+        let keys = ["⌘ command", "⇧ shift", "F"]
+        let widths: [CGFloat] = [220, 190, 110]
         let height: CGFloat = 96, gap: CGFloat = 28
-        var x = center.x - (widths.reduce(0, +) + gap) / 2
+        var x = center.x - (widths.reduce(0, +) + gap * CGFloat(widths.count - 1)) / 2
         for (key, w) in zip(keys, widths) {
             let r = NSRect(x: x, y: center.y - height / 2, width: w, height: height)
             let shadow = NSShadow()

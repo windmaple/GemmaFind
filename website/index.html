@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GemmaFind — search your Mac by meaning, on-device</title>
-  <meta name="description" content="GemmaFind is a free, open-source macOS menu-bar app. Press ⌃Space and find documents, code, PDFs, photos, videos and voice memos by what they mean — powered by EmbeddingGemma 2 running locally on your Mac's GPU.">
+  <meta name="description" content="GemmaFind is a free, open-source macOS menu-bar app. Press ⌘⇧F and find documents, code, PDFs, photos, videos and voice memos by what they mean — powered by EmbeddingGemma 2 running locally on your Mac's GPU.">
   <meta name="theme-color" content="#faf8f3">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta property="og:type" content="website">
   <meta property="og:title" content="GemmaFind — Spotlight on steroids for macOS">
-  <meta property="og:description" content="Press ⌃Space. Describe it. Find it — documents, code, photos, videos and voice memos, searched by meaning, 100% on-device.">
+  <meta property="og:description" content="Press ⌘⇧F. Describe it. Find it — documents, code, photos, videos and voice memos, searched by meaning, 100% on-device.">
   <meta property="og:image" content="/img/og.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,7 +53,7 @@
           </a>
           <a class="btn btn--ghost" href="https://github.com/windmaple/GemmaFind" id="hero-github">View source on GitHub</a>
         </div>
-        <p class="hero__hint">Press <span class="kbd">⌃</span><span class="kbd">Space</span> anywhere to search.</p>
+        <p class="hero__hint">Press <span class="kbd">⌘</span><span class="kbd">⇧</span><span class="kbd">F</span> anywhere to search.</p>
       </div>
 
       <!-- Interactive replica of the app, driven by real EmbeddingGemma 2 results -->
@@ -211,7 +211,7 @@
           <h2>Your hands never leave the keys.</h2>
         </div>
         <div class="keys reveal">
-          <div class="key"><span class="kbds"><span class="kbd">⌃</span><span class="kbd">Space</span></span><span>Open GemmaFind anywhere</span></div>
+          <div class="key"><span class="kbds"><span class="kbd">⌘</span><span class="kbd">⇧</span><span class="kbd">F</span></span><span>Open GemmaFind anywhere</span></div>
           <div class="key"><span class="kbds"><span class="kbd">↑</span><span class="kbd">↓</span></span><span>Move through results</span></div>
           <div class="key"><span class="kbds"><span class="kbd">↩</span></span><span>Open the file</span></div>
           <div class="key"><span class="kbds"><span class="kbd">⌘</span><span class="kbd">↩</span></span><span>Reveal in Finder</span></div>
@@ -241,8 +241,8 @@
           <div class="reqs reveal">
             <div class="req"><span class="req__n">1</span><div><b>macOS 14 or later, Apple Silicon</b><p>Runs on the Metal GPU through LiteRT-LM, with a CPU fallback.</p></div></div>
             <div class="req"><span class="req__n">2</span><div><b>Allow folder access</b><p>macOS asks once for Documents, Desktop and Downloads. Change folders anytime in Settings.</p></div></div>
-            <div class="req"><span class="req__n">3</span><div><b>Press ⌃Space</b><p>Indexing runs in the background — text first, so documents are searchable within moments.</p></div></div>
-            <p class="callout"><b>Heads-up:</b> macOS uses ⌃Space to switch input sources by default. If you type in more than one language, turn it off under System Settings → Keyboard → Keyboard Shortcuts → Input Sources. GemmaFind will remind you.</p>
+            <div class="req"><span class="req__n">3</span><div><b>Press ⌘⇧F</b><p>Indexing runs in the background — text first, so documents are searchable within moments.</p></div></div>
+            <p class="callout"><b>Heads-up:</b> ⌘⇧F is global, so it takes over from apps that use the same combo (like Find in Files in VS Code). If something else already owns it, GemmaFind will tell you — and it's always in the menu bar.</p>
           </div>
         </div>
       </div>

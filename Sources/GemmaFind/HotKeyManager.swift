@@ -1,7 +1,7 @@
 import Carbon
 import Cocoa
 
-/// Registers the global ⌃Space shortcut via the Carbon hot-key API
+/// Registers the global ⌘⇧F shortcut via the Carbon hot-key API
 /// (works without Accessibility permission).
 @MainActor
 final class HotKeyManager {
@@ -14,9 +14,11 @@ final class HotKeyManager {
 
     private init() {}
 
-    static let shortcutDisplay = "⌃Space"
-    private static let keyCode = UInt32(kVK_Space)          // 49
-    private static let carbonModifiers = UInt32(controlKey)
+    static let shortcutDisplay = "⌘⇧F"
+    private static let keyCode = UInt32(kVK_ANSI_F)         // 3
+    private static let carbonModifiers = UInt32(cmdKey | shiftKey)
+    /// The same modifiers in the NSEvent.ModifierFlags format used by com.apple.symbolichotkeys.
+    private static let cocoaModifierMask = Int(NSEvent.ModifierFlags([.command, .shift]).rawValue)
 
     /// Returns false if the shortcut could not be registered (e.g. another app owns it).
     @discardableResult
@@ -53,20 +55,18 @@ final class HotKeyManager {
     }
 
     /// macOS system shortcuts (System Settings → Keyboard → Keyboard Shortcuts) win over
-    /// app hot keys. ⌃Space is "Select the previous input source" by default, so report
-    /// any enabled system shortcut bound to the same key combination.
+    /// app hot keys, so report any enabled system shortcut bound to the same key combination.
     static func conflictingSystemShortcut() -> String? {
         guard let hotkeys = UserDefaults(suiteName: "com.apple.symbolichotkeys")?
             .dictionary(forKey: "AppleSymbolicHotKeys") else { return nil }
         let names = ["60": "Select the previous input source", "61": "Select next source in Input menu",
                      "64": "Show Spotlight search", "65": "Show Finder search window"]
-        let controlMask = 1 << 18   // NSEvent.ModifierFlags.control in the symbolic-hotkeys format
         for (id, raw) in hotkeys {
             guard let entry = raw as? [String: Any],
                   (entry["enabled"] as? Bool) == true || (entry["enabled"] as? Int) == 1,
                   let value = entry["value"] as? [String: Any],
                   let params = value["parameters"] as? [Int], params.count >= 3 else { continue }
-            if params[1] == Int(keyCode), params[2] == controlMask {
+            if params[1] == Int(keyCode), params[2] == cocoaModifierMask {
                 return names[id] ?? "a macOS system shortcut"
             }
         }

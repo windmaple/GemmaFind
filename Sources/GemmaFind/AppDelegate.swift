@@ -53,7 +53,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         alert.messageText = "macOS is using \(s) for “\(conflict)”"
         alert.informativeText = """
         System shortcuts take priority, so \(s) won't open GemmaFind until you turn that one off or rebind it:
-        System Settings → Keyboard → Keyboard Shortcuts… → Input Sources.
+        System Settings → Keyboard → Keyboard Shortcuts….
 
         GemmaFind is always available from the menu bar icon.
         """
@@ -78,8 +78,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         let menu = NSMenu()
         menu.delegate = self
-        let search = NSMenuItem(title: "Search…", action: #selector(showPanel), keyEquivalent: " ")
-        search.keyEquivalentModifierMask = [.control]
+        let search = NSMenuItem(title: "Search…", action: #selector(showPanel), keyEquivalent: "f")
+        search.keyEquivalentModifierMask = [.command, .shift]
         menu.addItem(search)
         menu.addItem(.separator())
         statusMenuItem.isEnabled = false
