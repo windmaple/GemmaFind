@@ -50,8 +50,57 @@ func runIndexCommand(_ command: String) async throws {
                          res.keywordMatch ? "K" : " ", res.file.name, where_, "", String(snippet)))
         }
 
+    case "demo-json":
+        // demo-json <corpus-root> <out.json> "q1" "q2" … — real results for the website demo.
+        let args = Array(CommandLine.arguments.dropFirst(2)).filter { !$0.hasPrefix("--db") && $0 != argValue("--db") }
+        guard args.count >= 3 else { print("usage: demo-json <corpus-root> <out.json> \"query\"…"); return }
+        let root = URL(fileURLWithPath: args[0]).standardizedFileURL.path
+        store.forEachEmbedding { cid, fid, m, v in vectors.add(chunkID: cid, fileID: fid, modality: m, vector: v) }
+        let engine = SearchEngine(store: store, vectors: vectors, embedder: embedder)
+        var out: [[String: Any]] = []
+        for q in args.dropFirst(2) {
+            let r = try await engine.search(q, limit: 4)
+            var results: [[String: Any]] = []
+            for res in r.results {
+                let rel = String(res.file.path.dropFirst(root.count))
+                var item: [String: Any] = [
+                    "name": res.file.name,
+                    "folder": "~/Documents" + (rel as NSString).deletingLastPathComponent,
+                    "kind": "\(res.file.kind)",
+                    "modality": "\(res.chunk.modality)",
+                    "similarity": (Double(res.similarity) * 1000).rounded() / 1000,
+                    "score": (res.score * 100).rounded() / 100,
+                    "keyword": res.keywordMatch,
+                ]
+                if let t = res.chunk.time { item["time"] = t; item["times"] = ([res.chunk] + res.extraChunks).compactMap { $0.time } }
+                if let d = res.chunk.duration { item["duration"] = d }
+                if let p = res.chunk.page { item["page"] = p + 1 }
+                if let text = res.chunk.text, let cr = res.chunk.range {
+                    let full: String
+                    if res.file.kind == .pdf {
+                        full = TextExtractor.pdfPages(of: res.file.url)[res.chunk.page ?? 0]
+                    } else {
+                        full = TextExtractor.fullText(of: res.file.url, kind: res.file.kind) ?? text
+                    }
+                    let sentences = await Highlighter.bestSentences(chunkText: text, chunkRange: cr, title: res.file.name,
+                                                                    queryVector: r.queryVector, embedder: embedder)
+                    // JS strings are UTF-16 too, so NSRange offsets carry over directly.
+                    item["text"] = full
+                    item["passage"] = [cr.location, cr.length]
+                    item["sentences"] = sentences.map { [$0.range.location, $0.range.length] }
+                    item["terms"] = Highlighter.termRanges(in: full, query: q).map { [$0.location, $0.length] }
+                }
+                results.append(item)
+            }
+            out.append(["query": q, "ms": Int(r.elapsed * 1000), "results": results])
+            print("  \(q) → \(r.results.map { $0.file.name })")
+        }
+        let data = try JSONSerialization.data(withJSONObject: out, options: [.prettyPrinted, .sortedKeys])
+        try data.write(to: URL(fileURLWithPath: args[1]))
+        print("Wrote \(args[1])")
+
     default:
-        print("Unknown command \(command). Use: smoke | index <folder> | search \"query\"")
+        print("Unknown command \(command). Use: smoke | index <folder> | search \"query\" | demo-json <root> <out> \"q\"…")
     }
 }
 

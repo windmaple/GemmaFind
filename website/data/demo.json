@@ -1,0 +1,343 @@
+[
+  {
+    "ms" : 93,
+    "query" : "what to bring on a hike",
+    "results" : [
+      {
+        "folder" : "~\/Documents\/docs",
+        "keyword" : false,
+        "kind" : "richText",
+        "modality" : "text",
+        "name" : "hiking-checklist.html",
+        "passage" : [
+          0,
+          284
+        ],
+        "score" : 4.2699999999999996,
+        "sentences" : [
+          [
+            64,
+            34
+          ],
+          [
+            171,
+            45
+          ]
+        ],
+        "similarity" : 0.81899999999999995,
+        "terms" : [
+          [
+            4,
+            4
+          ]
+        ],
+        "text" : "Day hike checklist\nTwo liters of water and electrolyte tablets\n\nRain shell and a warm fleece layer\nHeadlamp with spare batteries\n\nOffline map and a paper map with compass\nFirst-aid kit, blister plasters and sunscreen\n\nTell someone your route and expected return time before you leave."
+      }
+    ]
+  },
+  {
+    "ms" : 17,
+    "query" : "rent and pets clause",
+    "results" : [
+      {
+        "folder" : "~\/Documents\/docs",
+        "keyword" : false,
+        "kind" : "richText",
+        "modality" : "text",
+        "name" : "lease-agreement.docx",
+        "passage" : [
+          0,
+          581
+        ],
+        "score" : 3.7400000000000002,
+        "sentences" : [
+          [
+            392,
+            89
+          ]
+        ],
+        "similarity" : 0.73799999999999999,
+        "terms" : [
+          [
+            162,
+            4
+          ],
+          [
+            316,
+            4
+          ],
+          [
+            392,
+            4
+          ],
+          [
+            560,
+            4
+          ]
+        ],
+        "text" : "Residential Lease Agreement\n\nThis agreement is made between the landlord, Harbor Properties LLC, and the tenant for the apartment at 42 Seaview Road.\nThe monthly rent is 2,400 dollars, due on the first day of each month. A late fee of 75 dollars applies after the fifth day.\nThe security deposit equals one month of rent and will be returned within 30 days after move-out, minus any damages.\nPets are allowed with prior written consent and an additional pet deposit of 500 dollars.\nThe tenant may terminate early with 60 days notice and payment of one month's rent as a break fee.\n"
+      }
+    ]
+  },
+  {
+    "ms" : 17,
+    "query" : "dog playing in the garden",
+    "results" : [
+      {
+        "duration" : 20,
+        "folder" : "~\/Documents\/media",
+        "keyword" : false,
+        "kind" : "video",
+        "modality" : "audio",
+        "name" : "weekend.mp4",
+        "score" : 2.9100000000000001,
+        "similarity" : 0.755,
+        "time" : 0,
+        "times" : [
+          0
+        ]
+      }
+    ]
+  },
+  {
+    "ms" : 17,
+    "query" : "solar panels in snow",
+    "results" : [
+      {
+        "folder" : "~\/Documents\/docs",
+        "keyword" : true,
+        "kind" : "pdf",
+        "modality" : "text",
+        "name" : "solar-cold-climates.pdf",
+        "page" : 1,
+        "passage" : [
+          0,
+          734
+        ],
+        "score" : 7.2199999999999998,
+        "sentences" : [
+          [
+            388,
+            241
+          ]
+        ],
+        "similarity" : 0.76000000000000001,
+        "terms" : [
+          [
+            0,
+            5
+          ],
+          [
+            6,
+            5
+          ],
+          [
+            290,
+            4
+          ],
+          [
+            388,
+            6
+          ],
+          [
+            422,
+            4
+          ],
+          [
+            510,
+            6
+          ],
+          [
+            615,
+            4
+          ]
+        ],
+        "text" : "Solar Panel Efficiency in Cold Climates\nAbstract. Photovoltaic modules are often assumed to perform poorly in winter, ye t lower cell temperatures increase open-circuit voltage and conversion efficiency. We measured twelve rooftop insta llations in northern Norway over two years.\nResults. Snow cover was the dominant source of loss, reducing annual yield by 9 percent on low-tilt roofs. Panels mounted at 60 degrees shed snow quickly and produced 14 percent more ener gy per installed kilowatt than identical panels in southern Spain during clear spring days, thanks to cold temp eratures and reflected light from snow (albedo).\nConclusion. Steep mounting angles and bifacial modules are recommended for high- latitude installations."
+      }
+    ]
+  },
+  {
+    "ms" : 16,
+    "query" : "cache eviction",
+    "results" : [
+      {
+        "folder" : "~\/Documents\/code",
+        "keyword" : false,
+        "kind" : "text",
+        "modality" : "text",
+        "name" : "LRUCache.swift",
+        "passage" : [
+          855,
+          445
+        ],
+        "score" : 2.9500000000000002,
+        "sentences" : [
+          [
+            855,
+            68
+          ]
+        ],
+        "similarity" : 0.75,
+        "terms" : [
+          [
+            41,
+            5
+          ]
+        ],
+        "text" : "\/\/\/ A fixed-capacity least-recently-used cache backed by a dictionary and a doubly linked list.\nfinal class LRUCache<Key: Hashable, Value> {\n    private final class Node { let key: Key; var value: Value; var prev: Node?; var next: Node?\n        init(key: Key, value: Value) { self.key = key; self.value = value } }\n    private var map: [Key: Node] = [:]\n    private var head: Node?, tail: Node?\n    let capacity: Int\n    init(capacity: Int) { self.capacity = capacity }\n\n    func get(_ key: Key) -> Value? {\n        guard let node = map[key] else { return nil }\n        moveToFront(node); return node.value\n    }\n\n    func set(_ key: Key, _ value: Value) {\n        if let node = map[key] { node.value = value; moveToFront(node); return }\n        let node = Node(key: key, value: value); map[key] = node; insertFront(node)\n        if map.count > capacity, let lru = tail { remove(lru); map[lru.key] = nil }   \/\/ evict oldest\n    }\n    private func moveToFront(_ n: Node) { remove(n); insertFront(n) }\n    private func insertFront(_ n: Node) { n.next = head; head?.prev = n; head = n; if tail == nil { tail = n } }\n    private func remove(_ n: Node) { n.prev?.next = n.next; n.next?.prev = n.prev\n        if head === n { head = n.next }; if tail === n { tail = n.prev }; n.prev = nil; n.next = nil }\n}\n"
+      }
+    ]
+  },
+  {
+    "ms" : 16,
+    "query" : "pizza",
+    "results" : [
+      {
+        "folder" : "~\/Documents\/media",
+        "keyword" : false,
+        "kind" : "video",
+        "modality" : "videoFrame",
+        "name" : "weekend.mp4",
+        "score" : 2.2400000000000002,
+        "similarity" : 0.76700000000000002,
+        "time" : 21,
+        "times" : [
+          21,
+          12.199999999999999
+        ]
+      },
+      {
+        "folder" : "~\/Documents\/photos",
+        "keyword" : false,
+        "kind" : "image",
+        "modality" : "image",
+        "name" : "IMG_0420.jpg",
+        "score" : 2.1499999999999999,
+        "similarity" : 0.77100000000000002
+      }
+    ]
+  },
+  {
+    "ms" : 16,
+    "query" : "birthday cake errands",
+    "results" : [
+      {
+        "duration" : 7.5762499999999999,
+        "folder" : "~\/Documents\/media",
+        "keyword" : false,
+        "kind" : "audio",
+        "modality" : "audio",
+        "name" : "voice-memo-1.m4a",
+        "score" : 2.9900000000000002,
+        "similarity" : 0.68600000000000005,
+        "time" : 0,
+        "times" : [
+          0
+        ]
+      }
+    ]
+  },
+  {
+    "ms" : 16,
+    "query" : "retry with exponential backoff",
+    "results" : [
+      {
+        "folder" : "~\/Documents\/code",
+        "keyword" : true,
+        "kind" : "text",
+        "modality" : "text",
+        "name" : "retry.py",
+        "passage" : [
+          0,
+          456
+        ],
+        "score" : 6.79,
+        "sentences" : [
+          [
+            99,
+            82
+          ],
+          [
+            28,
+            70
+          ]
+        ],
+        "similarity" : 0.83099999999999996,
+        "terms" : [
+          [
+            32,
+            5
+          ],
+          [
+            43,
+            7
+          ],
+          [
+            115,
+            8
+          ],
+          [
+            142,
+            11
+          ],
+          [
+            154,
+            7
+          ]
+        ],
+        "text" : "import random\nimport time\n\n\ndef retry_with_backoff(fn, attempts=5, base_delay=0.5, max_delay=8.0):\n    \"\"\"Call fn, retrying on exception with exponential backoff and full jitter.\"\"\"\n    for attempt in range(attempts):\n        try:\n            return fn()\n        except Exception:\n            if attempt == attempts - 1:\n                raise\n            delay = min(max_delay, base_delay * (2 ** attempt))\n            time.sleep(random.uniform(0, delay))\n"
+      }
+    ]
+  },
+  {
+    "ms" : 20,
+    "query" : "why did the site go down",
+    "results" : [
+      {
+        "folder" : "~\/Documents\/notes",
+        "keyword" : false,
+        "kind" : "text",
+        "modality" : "text",
+        "name" : "meeting-2026-09-30.txt",
+        "passage" : [
+          0,
+          441
+        ],
+        "score" : 3.3599999999999999,
+        "sentences" : [
+          [
+            249,
+            106
+          ],
+          [
+            59,
+            106
+          ]
+        ],
+        "similarity" : 0.69199999999999995,
+        "terms" : [
+          [
+            185,
+            4
+          ]
+        ],
+        "text" : "Weekly sync — infrastructure\nAttendees: Priya, Marco, Lena\n- The database migration to the new cluster finished on Tuesday; p99 latency dropped from 180 ms to 95 ms.\n- Server costs are down 18% month over month after we turned off the old replicas.\n- Action item: Marco to write the postmortem for the Saturday outage caused by an expired TLS certificate.\n- Action item: Lena to set up certificate expiry alerts in the monitoring dashboard.\n"
+      }
+    ]
+  },
+  {
+    "ms" : 16,
+    "query" : "eiffel tower",
+    "results" : [
+      {
+        "folder" : "~\/Documents\/photos",
+        "keyword" : false,
+        "kind" : "image",
+        "modality" : "image",
+        "name" : "IMG_0431.jpg",
+        "score" : 4.0999999999999996,
+        "similarity" : 0.77400000000000002
+      }
+    ]
+  }
+]

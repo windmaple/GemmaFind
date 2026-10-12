@@ -2,6 +2,8 @@
 
 **Spotlight on steroids for macOS.** Press **⌃Space**, describe what you're looking for in plain language, and GemmaFind finds it by *meaning* in your documents, code, PDFs, photos, videos and voice memos. It runs entirely on your Mac with **EmbeddingGemma 2** on **LiteRT-LM**, accelerated by the Metal GPU.
 
+🌐 **Website:** [gemmafind-app.web.app](https://gemmafind-app.web.app)
+
 ![GemmaFind demo](assets/demo.gif)
 
 - "the lease clause about breaking early" → `lease-agreement.docx`, with the exact sentence highlighted
@@ -98,6 +100,7 @@ Sources/GemmaFindCore/   # UI-free engine
   TextExtractor.swift, MediaProcessor.swift, TextChunker.swift, FolderWatcher.swift
 Sources/GemmaFind/       # AppKit/SwiftUI menu-bar app (panel, previews, settings)
 Sources/gemmafind-cli/   # developer CLI
+website/                 # homepage (Firebase Hosting); data/demo.json = real search results via `gemmafind-cli demo-json`
 Vendor/LiteRTLM/         # LiteRT-LM v0.18.0 Swift wrapper (Apache 2.0, verbatim)
 ```
 

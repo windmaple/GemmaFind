@@ -5,3 +5,5 @@ GemmaFind.app/
 Tests/Fixtures/corpus/
 *.xcodeproj
 xcuserdata/
+.firebase/
+firebase-debug.log
