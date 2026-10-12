@@ -18,11 +18,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         setupStatusItem()
 
         HotKeyManager.shared.onActivate = { SearchPanelController.shared.toggle() }
+        let shortcut = HotKeyManager.shortcutDisplay
         if !HotKeyManager.shared.register() {
             let alert = NSAlert()
-            alert.messageText = "⌃⇧F is already in use"
-            alert.informativeText = "Another app has claimed the ⌃⇧F shortcut. You can still open GemmaFind from the menu bar."
+            alert.messageText = "\(shortcut) is already in use"
+            alert.informativeText = "Another app has claimed the \(shortcut) shortcut. You can still open GemmaFind from the menu bar."
             alert.runModal()
+        } else if AppModel.shared.testFolder == nil, let conflict = HotKeyManager.conflictingSystemShortcut(),
+                  !UserDefaults.standard.bool(forKey: "suppressShortcutConflictWarning") {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) { Self.warnAboutSystemShortcut(conflict) }
         }
 
         AppModel.shared.start()
@@ -43,6 +47,27 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         return true
     }
 
+    private static func warnAboutSystemShortcut(_ conflict: String) {
+        let s = HotKeyManager.shortcutDisplay
+        let alert = NSAlert()
+        alert.messageText = "macOS is using \(s) for “\(conflict)”"
+        alert.informativeText = """
+        System shortcuts take priority, so \(s) won't open GemmaFind until you turn that one off or rebind it:
+        System Settings → Keyboard → Keyboard Shortcuts… → Input Sources.
+
+        GemmaFind is always available from the menu bar icon.
+        """
+        alert.addButton(withTitle: "Open Keyboard Settings")
+        alert.addButton(withTitle: "Later")
+        alert.showsSuppressionButton = true
+        alert.suppressionButton?.title = "Don't remind me"
+        NSApp.activate(ignoringOtherApps: true)
+        if alert.runModal() == .alertFirstButtonReturn { HotKeyManager.openKeyboardShortcutsSettings() }
+        if alert.suppressionButton?.state == .on {
+            UserDefaults.standard.set(true, forKey: "suppressShortcutConflictWarning")
+        }
+    }
+
     // MARK: Menu bar
 
     private func setupStatusItem() {
@@ -53,8 +78,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
         let menu = NSMenu()
         menu.delegate = self
-        let search = NSMenuItem(title: "Search…", action: #selector(showPanel), keyEquivalent: "f")
-        search.keyEquivalentModifierMask = [.control, .shift]
+        let search = NSMenuItem(title: "Search…", action: #selector(showPanel), keyEquivalent: " ")
+        search.keyEquivalentModifierMask = [.control]
         menu.addItem(search)
         menu.addItem(.separator())
         statusMenuItem.isEnabled = false

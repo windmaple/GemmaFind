@@ -78,7 +78,12 @@ struct FocusedTextField: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: NSTextField, context: Context) {
-        if nsView.stringValue != text { nsView.stringValue = text }
+        if nsView.stringValue != text {
+            nsView.stringValue = text
+            if let editor = nsView.currentEditor() {
+                editor.selectedRange = NSRange(location: (text as NSString).length, length: 0)
+            }
+        }
     }
 
     func makeCoordinator() -> Coordinator { Coordinator(text: $text) }
@@ -285,10 +290,15 @@ struct EmptyResultsView: View {
         VStack(spacing: 10) {
             Spacer()
             if case .ready = model.modelState {
-                Image(systemName: "questionmark.folder").font(.system(size: 34, weight: .light)).foregroundStyle(.secondary)
-                Text(model.isSearching ? "Searching…" : "No matches yet").font(.headline)
-                if case .indexing = model.progress.phase {
-                    Text("Still indexing — results will improve as more files are processed.").font(.caption).foregroundStyle(.secondary)
+                if model.isSearching {
+                    ProgressView().controlSize(.regular)
+                    Text("Searching…").font(.callout).foregroundStyle(.secondary)
+                } else {
+                    Image(systemName: "questionmark.folder").font(.system(size: 34, weight: .light)).foregroundStyle(.secondary)
+                    Text("No matches").font(.headline)
+                    if case .indexing = model.progress.phase {
+                        Text("Still indexing — results will improve as more files are processed.").font(.caption).foregroundStyle(.secondary)
+                    }
                 }
             } else {
                 ModelStatusView()

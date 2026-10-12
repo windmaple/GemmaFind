@@ -1,6 +1,8 @@
 # GemmaFind
 
-**Spotlight on steroids for macOS.** Press **⌃⇧F**, describe what you're looking for in plain language, and GemmaFind finds it by *meaning* in your documents, code, PDFs, photos, videos and voice memos. It runs entirely on your Mac with **EmbeddingGemma 2** on **LiteRT-LM**, accelerated by the Metal GPU.
+**Spotlight on steroids for macOS.** Press **⌃Space**, describe what you're looking for in plain language, and GemmaFind finds it by *meaning* in your documents, code, PDFs, photos, videos and voice memos. It runs entirely on your Mac with **EmbeddingGemma 2** on **LiteRT-LM**, accelerated by the Metal GPU.
+
+![GemmaFind demo](assets/demo.gif)
 
 - "the lease clause about breaking early" → `lease-agreement.docx`, with the exact sentence highlighted
 - "dog playing in the garden" → `weekend.mp4` at 0:00, matched on the narration
@@ -9,7 +11,7 @@
 
 ## Features
 
-- **One shortcut, everywhere:** ⌃⇧F opens a floating, frosted search panel on whichever screen your pointer is on.
+- **One shortcut, everywhere:** ⌃Space opens a floating, frosted search panel on whichever screen your pointer is on.
 - **Multimodal semantic search.** Text, images, video frames and audio are embedded into one 768-d space, so a text query can find a photo or a spoken sentence.
 - **Hybrid ranking:**
   - cosine similarity, calibrated per modality so photos and documents compete fairly;
@@ -63,11 +65,14 @@ On first launch GemmaFind downloads `litert-community/embeddinggemma-2-740m-lite
 
 To keep it, copy `GemmaFind.app` to `/Applications` and enable **Launch at login** in Settings.
 
+> **⌃Space and input sources:** macOS uses ⌃Space for *Select the previous input source* by default, and system shortcuts take priority over apps. If you use more than one keyboard language, turn that shortcut off or rebind it under **System Settings → Keyboard → Keyboard Shortcuts… → Input Sources**. GemmaFind detects the conflict on launch and offers to open that pane.
+
 ## Development
 
 ```bash
 swift test                                   # unit tests (chunker, vector index, highlighter, extraction, pipeline)
 scripts/make_fixtures.sh                     # generate a mixed-media test corpus in Tests/Fixtures/corpus
+scripts/record_demo.sh                       # re-record assets/demo.gif from the real app (scripted, offscreen)
 swift run gemmafind-cli smoke                # load the model on GPU; sanity-check text/image/audio embeddings
 swift run gemmafind-cli index Tests/Fixtures/corpus --db /tmp/t.sqlite
 swift run gemmafind-cli search "solar panels in snow" --db /tmp/t.sqlite

@@ -54,11 +54,11 @@ final class SearchPanelController: NSObject, NSWindowDelegate {
         NotificationCenter.default.post(name: .gemmaFindPanelHidden, object: nil)
     }
 
-    /// Renders the panel's content to a PNG (behind-window blur is replaced by a solid fill).
-    func snapshot(to url: URL) {
-        guard let view = panel?.contentView else { return }
+    /// Renders the panel's content offscreen (behind-window blur is replaced by a solid fill).
+    func renderImage() -> NSImage? {
+        guard let view = panel?.contentView else { return nil }
         view.layoutSubtreeIfNeeded()
-        guard let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { return }
+        guard let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) else { return nil }
         view.cacheDisplay(in: view.bounds, to: rep)
         let image = NSImage(size: view.bounds.size)
         image.lockFocus()
@@ -66,10 +66,14 @@ final class SearchPanelController: NSObject, NSWindowDelegate {
         NSBezierPath(roundedRect: NSRect(origin: .zero, size: view.bounds.size), xRadius: 18, yRadius: 18).fill()
         rep.draw(in: NSRect(origin: .zero, size: view.bounds.size))
         image.unlockFocus()
-        if let tiff = image.tiffRepresentation, let bmp = NSBitmapImageRep(data: tiff),
-           let png = bmp.representation(using: .png, properties: [:]) {
-            try? png.write(to: url)
-        }
+        return image
+    }
+
+    /// Writes `renderImage()` to a PNG.
+    func snapshot(to url: URL) {
+        guard let image = renderImage(), let tiff = image.tiffRepresentation, let bmp = NSBitmapImageRep(data: tiff),
+              let png = bmp.representation(using: .png, properties: [:]) else { return }
+        try? png.write(to: url)
     }
 
     private func build() {

@@ -67,6 +67,9 @@ final class AppModel: ObservableObject {
         }
         queryCancellable = $query
             .removeDuplicates()
+            .handleEvents(receiveOutput: { [weak self] q in
+                if !q.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { self?.isSearching = true }
+            })
             .debounce(for: .milliseconds(120), scheduler: RunLoop.main)
             .sink { [weak self] q in self?.runSearch(q) }
     }
@@ -120,6 +123,12 @@ final class AppModel: ObservableObject {
 
         startWatcher()
         await indexer?.requestFullScan()
+        if testFolder != nil, let dir = ProcessInfo.processInfo.environment["GEMMAFIND_RECORD_DEMO"] {
+            try? await Task.sleep(nanoseconds: 1_500_000_000)   // let the initial scan land
+            await DemoRecorder(outDir: URL(fileURLWithPath: dir)).run(model: self)
+            NSApp.terminate(nil)
+            return
+        }
         if let demoQuery {
             SearchPanelController.shared.show()
             try? await Task.sleep(nanoseconds: 1_500_000_000)   // let the initial scan land
